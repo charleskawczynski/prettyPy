@@ -5,10 +5,9 @@ This program receives a string of some equation and wraps it in LaTeX code, and 
 
 Example:
 from prettyPy import prettyPy as pp <br>
-a = 'b*cos(theta) + c**(d*sin(gamma))'
-pp.prettyPrint(a)
+a = 'b*cos(theta) + c**(d*sin(gamma))' <br>
+pp.prettyPrint(a) <br>
 print pp.pretty(a) + ' = ' + str(eval(a))
-
 
 
 Developer: Charlie Kawczynski
