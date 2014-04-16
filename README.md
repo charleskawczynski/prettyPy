@@ -1,15 +1,14 @@
 prettyPy
 ========
 
-This program receives a string of some equation and wraps it in LaTeX code, and outputs the result to reduce the verbose implementation of writing LaTeX equations.
+I use this module with ipython notebook to write equations and expressions, as a string, in simple math syntax. This program wraps the string in LaTeX to beautify the result. There are two methods of implementation: (I) printing the resulting tag and (II) displaying the equation using the Ipython.display module. <br>
 
 --------------------------------------------------
 
 Example: <br>
 from prettyPy import prettyPy as pp <br>
-a = 'b*cos(theta) + c**(d*sin(gamma))' <br>
-pp.prettyPrint(a) <br>
-print pp.pretty(a)
+prettyPy.pretty('dy/dx = (y_2 - y_1)/(x_2 - x_1)') <br>
+prettyPy.prettyPrint('dy/dx = (y_2 - y_1)/(x_2 - x_1)') <br>
 
 --------------------------------------------------
 
