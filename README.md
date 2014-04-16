@@ -9,7 +9,7 @@ Example: <br>
 from prettyPy import prettyPy as pp <br>
 a = 'b*cos(theta) + c**(d*sin(gamma))' <br>
 pp.prettyPrint(a) <br>
-print pp.pretty(a) + ' = ' + str(eval(a))
+print pp.pretty(a)
 
 --------------------------------------------------
 
