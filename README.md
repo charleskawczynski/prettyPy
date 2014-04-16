@@ -7,8 +7,8 @@ This module is used with ipython notebook to write equations and expressions, as
 
 Example: <br>
 from prettyPy import prettyPy as pp <br>
-prettyPy.pretty('dy/dx = (y_2 - y_1)/(x_2 - x_1)') <br>
-prettyPy.prettyPrint('dy/dx = (y_2 - y_1)/(x_2 - x_1)') <br>
+pp.pretty('dy/dx = (y_2 - y_1)/(x_2 - x_1)') <br>
+pp.prettyPrint('dy/dx = (y_2 - y_1)/(x_2 - x_1)') <br>
 
 --------------------------------------------------
 
