@@ -21,8 +21,20 @@ from IPython.display import display, Math, Latex
 # pp.prettyPrint(a)
 # print pp.pretty(a) + ' = ' + str(eval(a))
 #-------------------------------------------------
-# Cases to fix:
-# pp.pretty('sum_n=1^k = 1')
+# Improvements to come:
+
+# -Remove replacement of * symbol to allow convolution expressions
+# and t^* superscripts..
+
+# - allow for defining variables in a local file for later use
+# ex: setVars({
+# "v_vec":"{\bf v_vec}",
+# "B":"{\bf B}",
+# })
+
+# -Reorganize greek letters, symbols, and user defined variables,
+# make them into a list and replace by decreasing string size
+
 #-------------------------------------------------
 # General things to fix:
 # -try moving exponent of sin()**2 to sin**2() and delta(t)^2 to delta^2(t)
@@ -34,53 +46,61 @@ def prettyPrint(s):
     return display(Math(markup(s)))
 
 def defineVars(s):
-    # Use s = replaceGreekLetter(s,L), this function simply inserts
-    # a backslash before the variable name while protecting against
-    # longer or shorter named variables
-    s = replaceGreekLetter(s,'pi')
-    s = replaceGreekLetter(s,'theta')
-    s = replaceGreekLetter(s,'Theta')
-    s = replaceGreekLetter(s,'det')
-    s = replaceGreekLetter(s,'sigma')
-    s = replaceGreekLetter(s,'Sigma')
+    # Replace Greek Letters:
     s = replaceGreekLetter(s,'alpha')
-    s = replaceGreekLetter(s,'gamma')
-    s = replaceGreekLetter(s,'omega')
-    s = replaceGreekLetter(s,'Omega')
-    s = replaceGreekLetter(s,'Gamma')
-    s = replaceGreekLetter(s,'partial')
+    s = replaceGreekLetter(s,'Alpha')
+    s = replaceGreekLetter(s,'beta')
+    s = replaceGreekLetter(s,'Beta')
     s = replaceGreekLetter(s,'Delta')
     s = replaceGreekLetter(s,'delta')
-    s = replaceGreekLetter(s,'tau')
+    s = replaceGreekLetter(s,'eta')
+    s = replaceGreekLetter(s,'epsilon')
+    s = replaceGreekLetter(s,'gamma')
+    s = replaceGreekLetter(s,'Gamma')
+    s = replaceGreekLetter(s,'kappa')
+    s = replaceGreekLetter(s,'lambda')
+    s = replaceGreekLetter(s,'nabla')
+    s = replaceGreekLetter(s,'mu')
     s = replaceGreekLetter(s,'nu')
+    s = replaceGreekLetter(s,'omega')
+    s = replaceGreekLetter(s,'Omega')
+    s = replaceGreekLetter(s,'partial')
+    s = replaceGreekLetter(s,'pi')
+    s = replaceGreekLetter(s,'Pi')
+    s = replaceGreekLetter(s,'psi')
+    s = replaceGreekLetter(s,'Psi')
+    s = replaceGreekLetter(s,'Phi')
+    s = replaceGreekLetter(s,'sigma')
+    s = replaceGreekLetter(s,'Sigma')
+    s = replaceGreekLetter(s,'tau')
+    s = replaceGreekLetter(s,'Tau')
+    s = replaceGreekLetter(s,'theta')
+    s = replaceGreekLetter(s,'Theta')
+    s = replaceGreekLetter(s,'varphi')
+    s = replaceGreekLetter(s,'varepsilon')
+    s = replaceGreekLetter(s,'xi')
+    s = replaceGreekLetter(s,'zeta')
+    # Define Symbols and Characters:
     s = replaceGreekLetter(s,'max')
     s = replaceGreekLetter(s,'min')
-    s = replaceGreekLetter(s,'mu')
-    s = replaceGreekLetter(s,'xi')
-    s = replaceGreekLetter(s,'kappa')
-    s = replaceGreekLetter(s,'Phi')
-    s = replaceGreekLetter(s,'varphi')
-    s = replaceGreekLetter(s,'nabla')
-    s = replaceGreekLetter(s,'lambda')
-    s = replaceGreekLetter(s,'eta')
-    s = replaceGreekLetter(s,'zeta')
-    s = replaceGreekLetter(s,'epsilon')
+    s = replaceGreekLetter(s,'sum')
+    s = replaceGreekLetter(s,'det')
     s = replaceGreekLetter(s,'iiint')
     s = replaceGreekLetter(s,'iint')
     s = replaceGreekLetter(s,'int')
-    s = replaceGreekLetter(s,'sum')
     s = replaceGreekLetter(s,'infty')
-    s = replaceGreekLetter(s,'varepsilon')
-    # Note that userDefinedVars assumes that the input and output
-    # names are NOT the same. e.g. cannot input (s,'k_var','\\k_var')
-    s = userDefinedVars(s,'pd','\\partial')
-    s = userDefinedVars(s,'eps','\\varepsilon')
-    s = userDefinedVars(s,'sig','\\sigma')
-    s = userDefinedVars(s,'Sig','\\Sigma')
-    s = userDefinedVars(s,'approx','\\approx')
+    s = userDefinedVars(s,'cross','\\times')
+    s = userDefinedVars(s,'dot','\\bullet')
     s = userDefinedVars(s,'infinity','\\infty')
-    s = userDefinedVars(s,'ne','\\ne')
     s = userDefinedVars(s,'order','\\cal O') # This is the script 'order' symbol
+    # Define Truncated Symbols and Characters (if truncation can be found in original):
+    s = userDefinedRecursiveVars(s,'approx','\\approx')
+    s = userDefinedRecursiveVars(s,'eps','\\epsilon')
+    s = userDefinedRecursiveVars(s,'sig','\\sigma')
+    s = userDefinedRecursiveVars(s,'ne','\\ne')
+    s = userDefinedRecursiveVars(s,'Sig','\\Sigma')
+    # Define Personal Variables:
+    s = userDefinedVars(s,'pd','\\partial')
     return s
 
 def functions(s):
@@ -121,6 +141,21 @@ def userDefinedVars(s,L,Lnew):
             s_after = s[loc+len(L):]
             s = s_before + Lnew + s_after
             r = r-1
+    return s
+
+def userDefinedRecursiveVars(s,L,Lnew):
+    for k in range(0,s.count(L)):
+        loc = find_nth(s,L,k+1)
+        if loc == 0:
+            TF = not re.match(r'[A-Za-z0-9]',s[loc+len(L)])
+        elif loc == len(s) - len(L):
+            TF = not re.match(r'[A-Za-z0-9]',s[loc-1])
+        else:
+            TF = not re.match(r'[A-Za-z0-9]',s[loc+len(L)]) and not re.match(r'[A-Za-z0-9]',s[loc-1])
+        if TF:
+            s_before = s[0:loc]
+            s_after = s[loc+len(L):]
+            s = s_before + Lnew + s_after
     return s
 
 def replaceGreekLetter(s,L):
@@ -178,6 +213,8 @@ def markup(s):
     s = s.replace('[',' \\left[ ')
     s = s.replace(']',' \\right] ')
     s = s.replace('*',' ')
+    s = s.replace('&','&&, \\qquad \\qquad')
+    s = '\\begin{align}' + s + '\\end{align}'
     s = '$$' + s + '$$'
     return s
 
@@ -230,7 +267,7 @@ def superscriptsWithParen(s):
     return s_new
 
 def subscripts(s):
-    r = re.compile(r'_[^\}\(\)\=\+\-\^\/\*]*')
+    r = re.compile(r'_[^\}\(\)\]\=\+\-\^\/\*]*')
     m = list(set(r.findall(s)))
     m.sort(lambda x,y: cmp(len(x), len(y)), reverse=True)
     for j in m:
