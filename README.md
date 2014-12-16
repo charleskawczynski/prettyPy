@@ -5,11 +5,12 @@ This python module can be used with ipython notebook to write equations and expr
 
 --------------------------------------------------
 
-Example: <br>
-from prettyPy import prettyPy as pp <br>
-pp.pretty('dy/dx = (y_2 - y_1)/(x_2 - x_1)') <br>
-pp.prettyPrint('dy/dx = (y_2 - y_1)/(x_2 - x_1)') <br>
-
+Example:
+```Python
+from prettyPy import prettyPy as pp
+pp.pretty('dy/dx = (y_2 - y_1)/(x_2 - x_1)')
+pp.prettyPrint('dy/dx = (y_2 - y_1)/(x_2 - x_1)')
+```
 --------------------------------------------------
 
 Developer: Charlie Kawczynski <br>
